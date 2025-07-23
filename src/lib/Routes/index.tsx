@@ -8,7 +8,7 @@ import InstructionPage from '@/pages/Instruction-page';
 import LoginPage from '@/pages/login-page';
 import { audianceRoutes } from './modules/users';
 import { settingRoute } from './modules/settingRoute';
-import {KBCAudiencePaper} from '@/pages/Authenticated/Audiance/KBCAudiencePaper';
+// import {KBCAudiencePaper} from '@/pages/Authenticated/Audiance/KBCAudiencePaper';
 import { eventManagementRoutes } from './modules/eventManagementRoutes';
 import QuestionPaperPage from '@/pages/Authenticated/Events/Components/set-event-question-dialog';
 import { PublicEventPage } from '@/pages/Authenticated/PublicEvent/publicEventPage';
@@ -65,15 +65,7 @@ export const routes: RouteType[] = [
 		layout: 'public',
 		middlewares: ['guest'],
 	},
-	{
-		isMenu: false,
-		label: 'Home',
-		icon: BookCopy,
-		path: "/kbc-audience-paper",
-		component: <KBCAudiencePaper />,
-		// layout: 'public',
-		middlewares: ['guest'],
-	},
+	
 	{
 		isMenu: false,
 		label: 'Home',

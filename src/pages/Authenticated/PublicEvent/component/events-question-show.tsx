@@ -1,5 +1,5 @@
 import { kbc } from "@/lib/helpers/api_urls";
-import { EventType } from "@/types/typedef";
+import { EventType, QuestionType } from "@/types/typedef";
 import { useMutation } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -17,7 +17,7 @@ export const EventQuestionShow = ({ event }: { event?: EventType }) => {
         const timer = setInterval(() => {
             setTimeLeft((prev) => {
                 if (prev <= 1) {
-                    if (currentQuestion < event.questions.length - 1) {
+                    if (currentQuestion < (event?.questions?.length || 0) - 1) {
                         setCurrentQuestion(curr => curr + 1);
                         return 30;
                     }
@@ -27,7 +27,7 @@ export const EventQuestionShow = ({ event }: { event?: EventType }) => {
             });
         }, 1000);
         return () => clearInterval(timer);
-    }, [currentQuestion, event.questions.length]);
+    }, [currentQuestion, event?.questions.length ?? 0]);
 
     // Reset timer on question change
     useEffect(() => {
@@ -40,16 +40,16 @@ export const EventQuestionShow = ({ event }: { event?: EventType }) => {
         onError: (error: any) => { toast.error(error?.response?.data?.message || "उत्तर सबमिट नहीं हो सका"); },
     });
 
-    const handleOptionChange = (questionId, selectedOption) => {
+    const handleOptionChange = (questionId: number, selectedOption: string) => {
         setAnswers(prev => ({ ...prev, [questionId]: selectedOption }));
     };
 
-    const handleQuestionSelect = (questionIndex) => {
+    const handleQuestionSelect = (questionIndex: number) => {
         setCurrentQuestion(questionIndex);
     };
 
     const handleNext = () => {
-        if (currentQuestion < event.questions.length - 1) {
+        if (currentQuestion < (event?.questions?.length || 0) - 1) {
             setCurrentQuestion(currentQuestion + 1);
         }
     };
@@ -77,10 +77,10 @@ export const EventQuestionShow = ({ event }: { event?: EventType }) => {
         );
     }
 
-    const currentQ = event.questions[currentQuestion];
+    const currentQ:QuestionType = event.questions[currentQuestion];
 
     // Simple background illustrations based on question type
-    const getBackgroundPattern = (questionText) => {
+    const getBackgroundPattern = (questionText:string) => {
         if (questionText.includes('गणित') || questionText.includes('संख्या')) {
             return 'bg-gradient-to-br from-blue-50 to-indigo-50';
         } else if (questionText.includes('विज्ञान') || questionText.includes('प्रकृति')) {
@@ -94,7 +94,7 @@ export const EventQuestionShow = ({ event }: { event?: EventType }) => {
     };
 
     return (
-        <div className={`min-h-screen p-4 ${getBackgroundPattern(currentQ.body)}`}>
+        <div className={`min-h-screen p-4 ${getBackgroundPattern(currentQ.body ?? '')}`}>
             {/* Background Decoration */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
                 <div className="absolute top-10 right-10 w-32 h-32 bg-amber-200 rounded-full opacity-20"></div>
@@ -146,7 +146,7 @@ export const EventQuestionShow = ({ event }: { event?: EventType }) => {
                                         key={index}
                                         className={`
                                         flex items-center p-3 border rounded-lg cursor-pointer
-                                        ${answers[currentQ.id] === option
+                                        ${answers[currentQ.id as number] === option
                                                                     ? 'border-amber-500 bg-amber-50'
                                                                     : 'border-gray-200 hover:border-amber-300'
                                                                 }
@@ -156,12 +156,12 @@ export const EventQuestionShow = ({ event }: { event?: EventType }) => {
                                             type="radio"
                                             name={`question-${currentQ.id}`}
                                             value={option}
-                                            checked={answers[currentQ.id] === option}
-                                            onChange={(e) => handleOptionChange(currentQ.id, e.target.value)}
+                                            checked={answers[currentQ.id as number] === option}
+                                            onChange={(e) => handleOptionChange(currentQ.id as number, e.target.value)}
                                             className="mr-3 text-amber-600"
                                         />
                                         <span className="flex-1 text-gray-700">{option}</span>
-                                        {answers[currentQ.id] === option && (
+                                        {answers[currentQ.id as number] === option && (
                                             <CheckCircle className="text-amber-600 w-5 h-5" />
                                         )}
                                     </label>

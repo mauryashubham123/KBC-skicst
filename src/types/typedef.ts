@@ -170,7 +170,7 @@ export type ValueType = {
 }
 
 export type QuestionType = {
-    id: string;
+    id: string | number;
     correct_answer: string;
     points: number;
     difficulty: string;
@@ -185,7 +185,8 @@ export type EventType = {
   name: string;
   description: string;
   is_active: boolean;
-  questions:string;
+  questions:QuestionType[];
   questionId:number|[];
-  answers:[]
+  answers:string[];
+  [key: string]: any;
 };

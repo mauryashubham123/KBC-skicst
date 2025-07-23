@@ -1,6 +1,6 @@
 
 import { TooltipProvider } from "@/components/ui/tooltip"
-import { ThemeToggler } from "./LayoutComponents/ThemeToggler"
+// import { ThemeToggler } from "./LayoutComponents/ThemeToggler"
 import BreadcrumbNav from "./LayoutComponents/BreadcrumbNav"
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "../ui/sidebar"
 import { AppSidebar } from "../Custom/AppSidebar"
@@ -42,7 +42,7 @@ export function MainLayout({children}:MainLayoutProps) {
                                     <SidebarTrigger />
                                     <BreadcrumbNav />
                                 </div>
-                                <ThemeToggler />
+                                {/* <ThemeToggler /> */}
                             </header>
                             {children}
                         </div>

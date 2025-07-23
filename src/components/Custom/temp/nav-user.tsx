@@ -1,15 +1,15 @@
-import { ChevronsUpDown, LogOut, User } from "lucide-react";
+import { ChevronsUpDown, LogOut } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { SidebarMenuButton, SidebarMenu, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar";
 import { useAuth } from "@/Auth/AuthProvider";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { AssetUrl } from "@/lib/helpers/api_helper";
 
 export function NavUser() {
     const { isMobile } = useSidebar();
     const { handleLogout, user } = useAuth();
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     return (
         <SidebarMenu>
             <SidebarMenuItem>
@@ -41,12 +41,12 @@ export function NavUser() {
                             </div>
                         </DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        <DropdownMenuGroup>
+                        {/* <DropdownMenuGroup>
                             <DropdownMenuItem onClick={() => navigate('/users/profile/'+user?.id)} className="cursor-pointer flex gap-2 items-center">
                                 <User className="size-4" />Profile
                             </DropdownMenuItem>
                         </DropdownMenuGroup>
-                        <DropdownMenuSeparator />
+                        <DropdownMenuSeparator /> */}
 
                         <DropdownMenuSeparator />
                         <DropdownMenuItem onClick={handleLogout} className="cursor-pointer flex gap-2 items-center">
