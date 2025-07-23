@@ -29,7 +29,7 @@ export const MainEventsPage = () => {
                 <div className="">
                      <EventHeader event={eventUpdates.data?.data?.event} />
                      {
-                        eventUpdates.data?.data?.event?.live_question==null ?
+                        eventUpdates.data?.data?.event?.live_question!==null ?
                             <WaitingIllustration  event={eventUpdates.data?.data?.event} />
                         :
                         <EventQuestionShow event={eventUpdates.data?.data?.event} />
