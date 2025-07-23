@@ -3,16 +3,17 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { KbcEventType } from "@/types/user";
-import { Lock, Unlock } from "lucide-react";
+import { Eye, Lock, Unlock } from "lucide-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { kbc } from "@/lib/helpers/api_urls";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 interface EventCardProps {
     event: KbcEventType;
+    isSubscribed?: boolean;
 }
 
-const EventCard: React.FC<EventCardProps> = ({ event }) => {
+const EventCard: React.FC<EventCardProps> = ({ event, isSubscribed }) => {
     const queryClient = useQueryClient();
 
     // Reveal Answer Mutation
@@ -27,13 +28,7 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
         }
     });
 
-    const mysubscriptions = useQuery<any, any, any>({
-        queryKey: ['mysubscriptions'],
-        queryFn: () => kbc.audiance_apis.mysubscriptions(event.id.toString()),
-        select: (res) => res.data,
-        staleTime: 5 * 60 * 1000, // 5 minutes
-        gcTime: 10 * 60 * 1000, // 10 minutes
-    });
+    
 
     const formatDateTime = (dateString: string) => {
         const date = new Date(dateString);
@@ -103,14 +98,23 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
 
                 {/* Action Buttons */}
                 {
-                    !event.is_locked && 
-                    <div className="flex flex-wrap gap-2">
-                        <Button variant="secondary" size="sm"  onClick={()=>subcribeMutation.mutate()}  >
-                            <Lock className="size-3 mr-1" />
-                            Subcribe
-                        </Button>
-
-                    </div>
+                    isSubscribed ?(
+                        <div className="flex flex-wrap gap-2">
+                            <Button className="bg-green-700" size="sm" onClick={() => navigate(`/event/${event.id}`)}>
+                                <Eye className="size-3 mr-1" />
+                                View Event
+                            </Button>
+                        </div>
+                    ):(
+                        !event.is_locked && 
+                        <div className="flex flex-wrap gap-2">
+                            <Button variant="secondary" size="sm"  onClick={()=>subcribeMutation.mutate()}  >
+                                <Lock className="size-3 mr-1" />
+                                Subcribe
+                            </Button>
+    
+                        </div>
+                    )
                 }
             </CardContent>
         </Card>

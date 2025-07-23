@@ -59,7 +59,7 @@ export const kbc = {
     },
     audiance_apis: {
         subscribeEvent: (parameters:string) => get('/kbc-audience/subscribe-event?event_id=' + parameters), 
-        mysubscriptions: (parameters:string) => get('/kbc-audience/my-subscriptions'), 
+        mysubscriptions: () => get('/kbc-audience/my-subscriptions'), 
         storeAnswer: (parameters:string) => get('/kbc-audience/store-answer?' + parameters),
         getEventUpdates: (parameters:string) => get('/kbc-audience/event-updates?' + parameters),
     }

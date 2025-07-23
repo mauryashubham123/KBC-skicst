@@ -17,6 +17,13 @@ export const PublicEventPage = () => {
         staleTime: 5 * 60 * 1000, // 5 minutes
         gcTime: 10 * 60 * 1000, // 10 minutes
     });
+    const mysubscriptions = useQuery<any, any, any>({
+        queryKey: ['mysubscriptions'],
+        queryFn: () => kbc.audiance_apis.mysubscriptions(),
+        select: (res) => res.data,
+        staleTime: 5 * 60 * 1000, // 5 minutes
+        gcTime: 10 * 60 * 1000, // 10 minutes
+    });
 
     useEffect(() => {
         dispatch(setBreadcrumb([
@@ -30,7 +37,7 @@ export const PublicEventPage = () => {
             {eventListQuery.data && eventListQuery.data.events.length > 0 && (
                 <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mt-6">
                     {eventListQuery.data.events.map((event:any) => (
-                        <EventCard key={event.id} event={event} />
+                        <EventCard key={event.id} event={event} isSubscribed={mysubscriptions.data.subscriptions?.some((sub:any) => sub.kbcevent_id === event.id)} />
                     ))}
                 </div>
             )}
