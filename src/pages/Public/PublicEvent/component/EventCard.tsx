@@ -48,6 +48,9 @@ const EventCard: React.FC<EventCardProps> = ({ event, isSubscribed }) => {
     };
 
     const navigate = useNavigate();
+    const showEventQuestion = () => {
+        navigate(`/events/view/${event.id}`);
+    };
     return (
         <Card className="hover:shadow-md transition-shadow">
             <CardHeader>
@@ -100,7 +103,7 @@ const EventCard: React.FC<EventCardProps> = ({ event, isSubscribed }) => {
                 {
                     isSubscribed ?(
                         <div className="flex flex-wrap gap-2">
-                            <Button className="bg-green-700" size="sm" onClick={() => navigate(`/event/${event.id}`)}>
+                            <Button className="bg-green-700" size="sm" onClick={() => showEventQuestion()}>
                                 <Eye className="size-3 mr-1" />
                                 View Event
                             </Button>

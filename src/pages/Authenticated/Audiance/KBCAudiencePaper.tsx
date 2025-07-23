@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Clock, Trophy, CheckCircle, Timer, Star, Award, Zap, ChevronLeft, ChevronRight, AlertTriangle } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { kbc } from '@/lib/helpers/api_urls';
 
 const questions = [
     {
@@ -73,6 +75,21 @@ export default function KBCQuiz() {
     const [isStarted, setIsStarted] = useState(false);
     const [showWarning, setShowWarning] = useState(false);
     const [lastWarningTime, setLastWarningTime] = useState(null);
+
+    const eventUpade = useQuery({
+        queryKey: ['eventUpdate'],
+        queryFn: () => kbc.audiance_apis.getEventUpdates(`event_id=2&since=${Date.now()}`),
+        // refetchInterval: 10000,
+        staleTime: Infinity,
+    });
+
+    useEffect(() => {
+        if (eventUpade.data) {
+            // if you want to fetch again after receiving some specific data
+            eventUpade.refetch();
+        }
+    }, [eventUpade.data]);
+
 
     // Audio context for alarms
     const playAlarm = (frequency = 800, duration = 200) => {
@@ -358,8 +375,8 @@ export default function KBCQuiz() {
                         {/* Timer */}
                         <div className="text-center mb-5">
                             <div className={`inline-flex items-center gap-2 px-4 py-3 rounded-2xl font-bold text-xl shadow-xl border-3 ${timeLeft <= 300 ? 'bg-red-500 text-white border-red-600 animate-pulse' :
-                                    timeLeft <= 600 ? 'bg-orange-500 text-white border-orange-600' :
-                                        'bg-green-500 text-white border-green-600'
+                                timeLeft <= 600 ? 'bg-orange-500 text-white border-orange-600' :
+                                    'bg-green-500 text-white border-green-600'
                                 }`}>
                                 <Timer className="w-6 h-6" />
                                 <span className="font-mono">{formatTime(timeLeft)}</span>
@@ -375,10 +392,10 @@ export default function KBCQuiz() {
                                         key={q.id}
                                         onClick={() => goToQuestion(index)}
                                         className={`w-full p-3 rounded-xl font-bold transition-all duration-300 flex items-center justify-between text-sm ${currentQuestion === index
-                                                ? 'bg-gradient-to-r from-yellow-500 to-orange-500 text-white shadow-lg transform scale-105'
-                                                : answers[q.id] !== undefined
-                                                    ? 'bg-green-100 text-green-800 border-2 border-green-300 hover:bg-green-200'
-                                                    : 'bg-white text-gray-700 border-2 border-gray-200 hover:bg-yellow-50 hover:border-yellow-300'
+                                            ? 'bg-gradient-to-r from-yellow-500 to-orange-500 text-white shadow-lg transform scale-105'
+                                            : answers[q.id] !== undefined
+                                                ? 'bg-green-100 text-green-800 border-2 border-green-300 hover:bg-green-200'
+                                                : 'bg-white text-gray-700 border-2 border-gray-200 hover:bg-yellow-50 hover:border-yellow-300'
                                             }`}
                                     >
                                         <span>प्रश्न {index + 1}</span>
@@ -435,8 +452,8 @@ export default function KBCQuiz() {
                                     {/* Mobile Timer */}
                                     <div className="lg:hidden">
                                         <div className={`flex items-center gap-1 px-2 py-1 md:px-3 md:py-2 rounded-xl font-bold text-xs md:text-sm ${timeLeft <= 300 ? 'bg-red-500 text-white animate-pulse' :
-                                                timeLeft <= 600 ? 'bg-orange-500 text-white' :
-                                                    'bg-green-500 text-white'
+                                            timeLeft <= 600 ? 'bg-orange-500 text-white' :
+                                                'bg-green-500 text-white'
                                             }`}>
                                             <Timer className="w-3 h-3 md:w-4 md:h-4" />
                                             <span className="font-mono">{formatTime(timeLeft)}</span>
@@ -458,14 +475,14 @@ export default function KBCQuiz() {
                                             key={optionIndex}
                                             onClick={() => handleAnswerSelect(optionIndex)}
                                             className={`text-left p-1 md:p-4 lg:p-6 rounded-2xl border-3 transition-all duration-300 font-semibold text-sm md:text-base lg:text-lg ${answers[currentQ.id] === optionIndex
-                                                    ? 'bg-gradient-to-r from-yellow-400 to-orange-400 border-yellow-500 text-white shadow-xl transform scale-105'
-                                                    : 'bg-white border-gray-300 hover:border-yellow-400 hover:bg-yellow-50 text-gray-800 hover:shadow-lg'
+                                                ? 'bg-gradient-to-r from-yellow-400 to-orange-400 border-yellow-500 text-white shadow-xl transform scale-105'
+                                                : 'bg-white border-gray-300 hover:border-yellow-400 hover:bg-yellow-50 text-gray-800 hover:shadow-lg'
                                                 }`}
                                         >
                                             <div className="flex items-center gap-2 md:gap-3">
                                                 <div className={`w-6 h-6 md:w-4 md:h-4 lg:w-8 lg:h-8 rounded-full border-3 flex items-center justify-center font-bold transition-all duration-300 text-sm md:text-base ${answers[currentQ.id] === optionIndex
-                                                        ? 'bg-white text-orange-600 border-white'
-                                                        : 'border-gray-400 text-gray-600'
+                                                    ? 'bg-white text-orange-600 border-white'
+                                                    : 'border-gray-400 text-gray-600'
                                                     }`}>
                                                     {String.fromCharCode(65 + optionIndex)}
                                                 </div>
@@ -482,8 +499,8 @@ export default function KBCQuiz() {
                                             onClick={prevQuestion}
                                             disabled={currentQuestion === 0}
                                             className={`px-6 py-3 rounded-xl font-bold transition-all duration-300 flex items-center gap-2 ${currentQuestion === 0
-                                                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                                                    : 'bg-blue-500 hover:bg-blue-600 text-white shadow-lg transform hover:scale-105'
+                                                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                                : 'bg-blue-500 hover:bg-blue-600 text-white shadow-lg transform hover:scale-105'
                                                 }`}
                                         >
                                             <ChevronLeft className="w-5 h-5" />
@@ -494,8 +511,8 @@ export default function KBCQuiz() {
                                             onClick={nextQuestion}
                                             disabled={currentQuestion === questions.length - 1}
                                             className={`px-6 py-3 rounded-xl font-bold transition-all duration-300 flex items-center gap-2 ${currentQuestion === questions.length - 1
-                                                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                                                    : 'bg-blue-500 hover:bg-blue-600 text-white shadow-lg transform hover:scale-105'
+                                                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                                : 'bg-blue-500 hover:bg-blue-600 text-white shadow-lg transform hover:scale-105'
                                                 }`}
                                         >
                                             अगला

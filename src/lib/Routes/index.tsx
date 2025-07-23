@@ -1,4 +1,4 @@
-import { BookCopy, Home, LogInIcon } from 'lucide-react';
+import { BookCopy, Home, LogInIcon, PartyPopper } from 'lucide-react';
 import _404 from '@/pages/Error/404';
 import { RouteType } from '@/types/route';
 import LandingPage from '@/pages/Public/LandingPage/Index';
@@ -45,8 +45,19 @@ export const routes: RouteType[] = [
 	{
 		isMenu: true,
 		path: "/events",
+		icon: PartyPopper,
 		label: 'Events',
 		component: <PublicEventPage />,
+		layout: 'main',
+		middlewares: ['auth'],
+		users: ['student', 'visitor'],
+	},
+	{
+		isMenu: false,
+		path: "/events/view/:event_id",
+		icon: PartyPopper,
+		label: 'Events',
+		component: <KBCAudiencePaper />,
 		layout: 'main',
 		middlewares: ['auth'],
 		users: ['student', 'visitor'],
