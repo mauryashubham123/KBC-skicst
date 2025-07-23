@@ -98,6 +98,7 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
     };
 
     const navigate = useNavigate();
+    
     return (
         <Card className="hover:shadow-md transition-shadow">
             <CardHeader>
@@ -270,6 +271,7 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
         </Card>
     );
 };
+
 
 export default EventCard;
 

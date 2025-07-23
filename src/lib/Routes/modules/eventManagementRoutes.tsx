@@ -37,7 +37,16 @@ export const eventManagementRoutes: RouteType[] = [
                 middlewares: ['auth'],
                 users: ['admin', 'super_admin', 'staff', 'reciptionist'],
             },
-           
+            {
+                isMenu: false,
+                path: "/set-paper",
+                label: 'Set Question Paper',
+                icon: Gamepad,
+                component: <QuestionPaperPage />,
+                layout: 'main',
+                middlewares: ['auth'],
+                users: ['admin', 'super_admin', 'staff', 'reciptionist'],
+            }
         ]
     },
 

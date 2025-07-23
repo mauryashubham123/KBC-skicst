@@ -58,7 +58,8 @@ export const kbc = {
         deleteQuestion: (id:string|number) => del(`/kbc-question/delete/${id}`),  //complete
     },
     audiance_apis: {
-        subscribeEvent: (parameters:string) => get('/kbc-audience/subscribe-event?' + parameters), 
+        subscribeEvent: (parameters:string) => get('/kbc-audience/subscribe-event?event_id=' + parameters), 
+        mysubscriptions: (parameters:string) => get('/kbc-audience/my-subscriptions'), 
         storeAnswer: (parameters:string) => get('/kbc-audience/store-answer?' + parameters),
         getEventUpdates: (parameters:string) => get('/kbc-audience/event-updates?' + parameters),
     }

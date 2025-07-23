@@ -1,4 +1,4 @@
-import { BookCopy, Home, LogInIcon} from 'lucide-react';
+import { BookCopy, Home, LogInIcon } from 'lucide-react';
 import _404 from '@/pages/Error/404';
 import { RouteType } from '@/types/route';
 import LandingPage from '@/pages/Public/LandingPage/Index';
@@ -11,6 +11,7 @@ import { settingRoute } from './modules/settingRoute';
 import KBCAudiencePaper from '@/pages/Authenticated/Audiance/KBCAudiencePaper';
 import { eventManagementRoutes } from './modules/eventManagementRoutes';
 import QuestionPaperPage from '@/pages/Authenticated/Events/Components/set-event-question-dialog';
+import { PublicEventPage } from '@/pages/Public/PublicEvent/publicEventPage';
 export const routes: RouteType[] = [
 	{
 		isMenu: true,
@@ -32,15 +33,24 @@ export const routes: RouteType[] = [
 	// 	layout: 'main',
 	// 	middlewares: ['auth'],
 	// },
-	 {
-                isMenu: false,
-                path: "/event-management/events/set-paper",
-                label: 'Set Question Paper',
-                component: <QuestionPaperPage />,
-                layout: 'main',
-                middlewares: ['auth'],
-                users: ['admin', 'super_admin', 'staff', 'reciptionist'],
-            },
+	{
+		isMenu: false,
+		path: "/event-management/events/set-paper",
+		label: 'Set Question Paper',
+		component: <QuestionPaperPage />,
+		layout: 'main',
+		middlewares: ['auth'],
+		users: ['admin', 'super_admin', 'staff', 'reciptionist'],
+	},
+	{
+		isMenu: true,
+		path: "/events",
+		label: 'Events',
+		component: <PublicEventPage />,
+		layout: 'main',
+		middlewares: ['auth'],
+		users: ['student', 'visitor'],
+	},
 	// Public Routes
 	{
 		isMenu: false,
