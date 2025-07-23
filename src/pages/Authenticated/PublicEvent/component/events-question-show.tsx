@@ -62,6 +62,13 @@ export const EventQuestionShow = ({ event }: { event?: EventType }) => {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        const totalQuestions = event?.questions.length;
+        const answeredQuestions = Object.keys(answers).length;
+
+        if (answeredQuestions < totalQuestions) {
+            toast.error("कृपया सभी प्रश्नों के उत्तर दें।");
+            return;
+        }
         if (!event?.id) return;
         const formData = new FormData();
         formData.append('event_id', String(event.id));
@@ -77,10 +84,10 @@ export const EventQuestionShow = ({ event }: { event?: EventType }) => {
         );
     }
 
-    const currentQ:QuestionType = event.questions[currentQuestion];
+    const currentQ: QuestionType = event.questions[currentQuestion];
 
     // Simple background illustrations based on question type
-    const getBackgroundPattern = (questionText:string) => {
+    const getBackgroundPattern = (questionText: string) => {
         if (questionText.includes('गणित') || questionText.includes('संख्या')) {
             return 'bg-gradient-to-br from-blue-50 to-indigo-50';
         } else if (questionText.includes('विज्ञान') || questionText.includes('प्रकृति')) {
@@ -147,9 +154,9 @@ export const EventQuestionShow = ({ event }: { event?: EventType }) => {
                                         className={`
                                         flex items-center p-3 border rounded-lg cursor-pointer
                                         ${answers[currentQ.id as number] === option
-                                                                    ? 'border-amber-500 bg-amber-50'
-                                                                    : 'border-gray-200 hover:border-amber-300'
-                                                                }
+                                                ? 'border-amber-500 bg-amber-50'
+                                                : 'border-gray-200 hover:border-amber-300'
+                                            }
                                         `}
                                     >
                                         <input
@@ -176,9 +183,9 @@ export const EventQuestionShow = ({ event }: { event?: EventType }) => {
                                     className={`
                                         px-4 py-2 rounded-lg font-bold
                                         ${currentQuestion === 0
-                                                                ? 'bg-gray-200 text-gray-400'
-                                                                : 'bg-amber-600 text-white hover:bg-amber-700'
-                                                            }
+                                            ? 'bg-gray-200 text-gray-400'
+                                            : 'bg-amber-600 text-white hover:bg-amber-700'
+                                        }
                                     `}
                                 >
                                     पिछला

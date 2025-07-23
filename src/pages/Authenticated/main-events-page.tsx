@@ -5,6 +5,7 @@ import { useLocation } from "react-router-dom";
 import { EventHeader } from "./PublicEvent/component/Headerpage";
 import WaitingIllustration from "@/components/waiting-Illustration";
 import { EventQuestionShow } from "./PublicEvent/component/events-question-show";
+import EventScoreDisplay from "./PublicEvent/component/event-score-display";
 
 export const MainEventsPage = () => {
     const counterRef = useRef(0);
@@ -31,6 +32,14 @@ export const MainEventsPage = () => {
                      {
                         !eventUpdates.data?.data?.event?.is_active ?
                             <WaitingIllustration  event={eventUpdates.data?.data?.event} />
+                        :
+                        eventUpdates.data?.data?.answers ?
+                        <>
+                            <EventScoreDisplay  
+                                event={eventUpdates.data?.data?.event}
+                                answers={eventUpdates.data?.data?.answers}
+                                isLoading={eventUpdates.isLoading} />
+                        </>
                         :
                         <EventQuestionShow event={eventUpdates.data?.data?.event} />
                      }
