@@ -181,3 +181,11 @@ export type QuestionType = {
     body?: string;
     question?: string;
 };
+export type EventType = {
+  name: string;
+  description: string;
+  is_active: boolean;
+  questions:string;
+  questionId:number|[];
+  answers:[]
+};

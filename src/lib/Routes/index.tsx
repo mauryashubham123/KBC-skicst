@@ -8,10 +8,11 @@ import InstructionPage from '@/pages/Instruction-page';
 import LoginPage from '@/pages/login-page';
 import { audianceRoutes } from './modules/users';
 import { settingRoute } from './modules/settingRoute';
-import KBCAudiencePaper from '@/pages/Authenticated/Audiance/KBCAudiencePaper';
+import {KBCAudiencePaper} from '@/pages/Authenticated/Audiance/KBCAudiencePaper';
 import { eventManagementRoutes } from './modules/eventManagementRoutes';
 import QuestionPaperPage from '@/pages/Authenticated/Events/Components/set-event-question-dialog';
-import { PublicEventPage } from '@/pages/Public/PublicEvent/publicEventPage';
+import { PublicEventPage } from '@/pages/Authenticated/PublicEvent/publicEventPage';
+import { MainEventsPage } from '@/pages/Authenticated/main-events-page';
 export const routes: RouteType[] = [
 	{
 		isMenu: true,
@@ -49,7 +50,7 @@ export const routes: RouteType[] = [
 		path: "/events/view/:event_id",
 		icon: PartyPopper,
 		label: 'Events',
-		component: <KBCAudiencePaper />,
+		component: <MainEventsPage />,
 		layout: 'main',
 		middlewares: ['auth'],
 		users: ['student', 'visitor'],

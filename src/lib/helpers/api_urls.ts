@@ -61,6 +61,7 @@ export const kbc = {
         subscribeEvent: (parameters:string) => get('/kbc-audience/subscribe-event?event_id=' + parameters), 
         mysubscriptions: () => get('/kbc-audience/my-subscriptions'), 
         storeAnswer: (parameters:string) => get('/kbc-audience/store-answer?' + parameters),
+        storeAnswers: (formData: FormData) =>post('/kbc-audience/store-event-answers', formData),
         getEventUpdates: (parameters:string) => get('/kbc-audience/event-updates?' + parameters),
     }
 }
