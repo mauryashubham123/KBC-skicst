@@ -30,27 +30,27 @@ const QuestionPaperPage = () => {
     // Load from localStorage
     const [selectedEventId, setSelectedEventId] = useState(() => {
         const config = localStorage.getItem('questionpaperconfig');
-        return config ? JSON.parse(config).selectedEventId : '';
+        return config ? JSON.parse(config).selectedEventId === 'all'?'': JSON.parse(config).selectedEventId : '';
     });
 
     const [course, setCourse] = useState(() => {
         const config = localStorage.getItem('questionpaperconfig');
-        return config ? JSON.parse(config).course : '';
+        return config ? JSON.parse(config).course === 'all'?'': JSON.parse(config).course : '';
     });
 
     const [subject, setSubject] = useState(() => {
         const config = localStorage.getItem('questionpaperconfig');
-        return config ? JSON.parse(config).subject : '';
+        return config ? JSON.parse(config).subject === 'all'?'': JSON.parse(config).subject : '';
     });
 
     const [topic, setTopic] = useState(() => {
         const config = localStorage.getItem('questionpaperconfig');
-        return config ? JSON.parse(config).topic : '';
+        return config ? JSON.parse(config).topic === 'all'?'': JSON.parse(config).topic : '';
     });
 
     const [difficulty, setDifficulty] = useState(() => {
         const config = localStorage.getItem('questionpaperconfig');
-        return config ? JSON.parse(config).difficulty : '';
+        return config ? JSON.parse(config).difficulty === 'all'?'': JSON.parse(config).difficulty : '';
     });
 
     const [searchText, setSearchText] = useState(() => {
@@ -246,7 +246,7 @@ const QuestionPaperPage = () => {
                     {/* Course Filter */}
                     <div className="min-w-40">
                         <Label>Course</Label>
-                        <Select value={course} onValueChange={setCourse}>
+                        <Select value={course} onValueChange={(e)=>setCourse(e==='all'?'':e)}>
                             <SelectTrigger>
                                 <SelectValue placeholder="All Courses" />
                             </SelectTrigger>
@@ -264,7 +264,7 @@ const QuestionPaperPage = () => {
                     {/* Subject Filter */}
                     <div className="min-w-40">
                         <Label>Subject</Label>
-                        <Select value={subject} onValueChange={setSubject}>
+                        <Select value={subject} onValueChange={(e)=>setSubject(e==='all'?'':e)}>
                             <SelectTrigger>
                                 <SelectValue placeholder="All Subjects" />
                             </SelectTrigger>
@@ -282,7 +282,7 @@ const QuestionPaperPage = () => {
                     {/* Topic Filter */}
                     <div className="min-w-40">
                         <Label>Set Paper Series</Label>
-                        <Select value={topic} onValueChange={setTopic}>
+                        <Select value={topic} onValueChange={(e)=>setTopic(e==='all'?'':e)}>
                             <SelectTrigger>
                                 <SelectValue placeholder="All Set Papers" />
                             </SelectTrigger>
@@ -300,7 +300,7 @@ const QuestionPaperPage = () => {
                     {/* Difficulty Filter */}
                     <div className="min-w-36">
                         <Label>Difficulty</Label>
-                        <Select value={difficulty} onValueChange={setDifficulty}>
+                        <Select value={difficulty} onValueChange={(e)=>setDifficulty(e==='all'?'':e)}>
                             <SelectTrigger>
                                 <SelectValue placeholder="All Levels" />
                             </SelectTrigger>

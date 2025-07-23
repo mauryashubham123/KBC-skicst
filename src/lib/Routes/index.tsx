@@ -25,14 +25,6 @@ export const routes: RouteType[] = [
 	...audianceRoutes,
 	...eventManagementRoutes,
 	...settingRoute,
-	// {
-	// 	isMenu: false,
-	// 	label: 'User Profile',
-	// 	path: "/users/profile/:user_id",
-	// 	component: <UserProfile />,
-	// 	layout: 'main',
-	// 	middlewares: ['auth'],
-	// },
 	{
 		isMenu: false,
 		path: "/event-management/events/set-paper",

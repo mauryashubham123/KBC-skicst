@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Clock, Trophy, CheckCircle, Timer, Star, Award, Zap, ChevronLeft, ChevronRight, AlertTriangle } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { kbc } from '@/lib/helpers/api_urls';
+import { useParams } from 'react-router-dom';
 
 const questions = [
     {
@@ -75,20 +76,19 @@ export default function KBCQuiz() {
     const [isStarted, setIsStarted] = useState(false);
     const [showWarning, setShowWarning] = useState(false);
     const [lastWarningTime, setLastWarningTime] = useState(null);
-
-    const eventUpade = useQuery({
+    const {event_id} = useParams();
+    const eventUpdates = useQuery({
         queryKey: ['eventUpdate'],
-        queryFn: () => kbc.audiance_apis.getEventUpdates(`event_id=2&since=${Date.now()}`),
-        // refetchInterval: 10000,
+        queryFn: () => kbc.audiance_apis.getEventUpdates(`event_id=${event_id}&since=${Date.now()}`),
         staleTime: Infinity,
     });
 
     useEffect(() => {
-        if (eventUpade.data) {
+        if (eventUpdates.data) {
             // if you want to fetch again after receiving some specific data
-            eventUpade.refetch();
+            eventUpdates.refetch();
         }
-    }, [eventUpade.data]);
+    }, [eventUpdates.data]);
 
 
     // Audio context for alarms
