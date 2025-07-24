@@ -1,26 +1,26 @@
 import { useState, useEffect } from 'react';
-import { Trophy, Star, Medal, CheckCircle, Clock, Users, Target } from 'lucide-react';
+import { Trophy, Star, Medal,  Target } from 'lucide-react';
 
 // Main Score Display Component
-const EventScoreDisplay = ({ event, userAnswers }: { event: any; userAnswers: any; isLoading: boolean }) => {
+const EventScoreDisplay = ({  userAnswers }: { event: any; userAnswers: any; isLoading: boolean }) => {
   const [showAnimation, setShowAnimation] = useState(false);
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
 
   // Motivational messages based on score
-  const getMotivationalMessages = (scorePercentage: number) => {
-    if (scorePercentage >= 90) {
+  const getMotivationalMessages = () => {
+    if (userAnswers?.score >= 20) {
       return [
         "🌟 अद्भुत! आप एक सच्चे चैंपियन हैं!",
         "🏆 आपका प्रदर्शन शानदार रहा!",
         "✨ आप इस quiz के विजेता हैं!"
       ];
-    } else if (event.score >= 70) {
+    } else if (userAnswers?.score >= 15) {
       return [
         "👏 बहुत बढ़िया! आपने अच्छा प्रदर्शन किया!",
         "🎯 आप सही राह पर हैं!",
         "💪 आपकी मेहनत रंग लाई!"
       ];
-    } else if (event.score >= 50) {
+    } else if (userAnswers?.score >= 10) {
       return [
         "📚 अच्छी कोशिश! और भी बेहतर कर सकते हैं!",
         "🌱 आप सीख रहे हैं, यही सबसे जरूरी है!",
@@ -35,7 +35,7 @@ const EventScoreDisplay = ({ event, userAnswers }: { event: any; userAnswers: an
     }
   };
 
-  const messages = getMotivationalMessages(0);
+  const messages = getMotivationalMessages();
 
   // Animation effects
   useEffect(() => {
@@ -88,7 +88,7 @@ const EventScoreDisplay = ({ event, userAnswers }: { event: any; userAnswers: an
             }`}>
               <div className="mb-4 flex justify-center">
                 <div className="animate-bounce">
-                  {getTrophyIcon(answers.score)}
+                  {getTrophyIcon(userAnswers.score)}
                 </div>
               </div>
               <h1 className="text-3xl font-bold mb-2">🎉 Quiz पूर्ण! 🎉</h1>
@@ -104,7 +104,7 @@ const EventScoreDisplay = ({ event, userAnswers }: { event: any; userAnswers: an
               {/* Main Score Display */}
               <div className="bg-gradient-to-br from-amber-100 to-orange-100 rounded-2xl p-8 mb-6 border border-amber-200">
                 <div className="text-6xl font-bold text-amber-700 mb-2 animate-pulse">
-                  {answers?.score}
+                  {userAnswers?.score}
                 </div>
                 <div className="text-xl text-gray-700 mb-4">
                   स्कोर 
@@ -114,7 +114,7 @@ const EventScoreDisplay = ({ event, userAnswers }: { event: any; userAnswers: an
                 <div className="w-full bg-gray-200 rounded-full h-4 mb-4">
                   <div
                     className="bg-gradient-to-r from-amber-500 to-orange-500 h-4 rounded-full transition-all duration-2000 ease-out"
-                    style={{ width: `${answers?.score}%` }}
+                    
                   ></div>
                 </div>
               </div>

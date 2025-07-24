@@ -8,7 +8,6 @@ import { kbc } from "@/lib/helpers/api_urls";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { RefreshCwIcon } from "lucide-react";
-import { CustomSelect } from "@/components/Custom/CustomSelect";
 import { SearchDialog } from "@/components/Custom/search-dialog";
 import { cn } from "@/lib/utils";
 import { TableEmptyState } from "@/components/Custom/table-empty-state";

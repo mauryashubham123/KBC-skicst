@@ -17,9 +17,7 @@ export const MainEventsPage = () => {
         staleTime: Infinity,
     });
     useEffect(() => {
-        console.log('use Effect triggred');
         if (eventUpdates.data) {
-            console.log('update received');
             if (eventUpdates.data.data.event) {
                 counterRef.current++;
             }
