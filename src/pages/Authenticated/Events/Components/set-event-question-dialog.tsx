@@ -16,6 +16,7 @@ import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { QuestionType } from "@/types/typedef";
+import { CustomSelect } from "@/components/Custom/CustomSelect";
 
 
 
@@ -57,6 +58,10 @@ const QuestionPaperPage = () => {
         const config = localStorage.getItem('questionpaperconfig');
         return config ? JSON.parse(config).searchText : '';
     });
+
+    const [selectedMode, setSelectedMode] = useState<string>('mode1');
+    const [selectedMode2Question,setSelectedMode2Question] = useState<string|number>();
+ 
 
     const [selectedQuestionId, setSelectedQuestionId] = useState<(string | number)[]>([]);
 
@@ -102,7 +107,9 @@ const QuestionPaperPage = () => {
     });
     // Set question for event mutation
     const setQuestionMutation = useMutation({
-        mutationFn: (formData:FormData) => kbc.event_apis.assignQuestions(formData),
+        mutationFn: (formData:FormData) => selectedMode == 'mode1'
+            ? kbc.event_apis.assignQuestions(formData) 
+            : kbc.event_apis.setEventQuestion(`live_question_id=${selectedMode2Question}&id=${selectedEventId}`),
         onSuccess: (res) => {
             toast.success(res.message || 'Question set successfully for event');
             queryClient.invalidateQueries({ queryKey: ['events'] });
@@ -136,9 +143,16 @@ const QuestionPaperPage = () => {
             toast.error('Please select an event first');
             return;
         }
-        if (!selectedQuestionId.length) {
-            toast.error('Please select a question to set');
-            return;
+        if(selectedMode == 'mode1'){
+            if (!selectedQuestionId.length) {
+                toast.error('Please select a question to set');
+                return;
+            }
+        }else{
+            if(!selectedMode2Question){
+                toast.error('Please select a question to set');
+                return
+            }
         }
         setQuestionMutation.mutate(formData);
     };
@@ -167,25 +181,39 @@ const QuestionPaperPage = () => {
                 </CardHeader>
                 <CardContent>
                     <div className="grid gap-4">
-                        <div className="min-w-64">
-                            <Label htmlFor="event-select">Choose Event *</Label>
-                            <Select value={selectedEventId} onValueChange={setSelectedEventId}>
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Select an event..." />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {eventListQuery.data?.events?.map((event) => (
-                                        <SelectItem key={event.id} value={event.id.toString()}>
-                                            <div className="flex items-center gap-2">
-                                                <span>{event.name}</span>
-                                                <Badge variant={event.is_active ? "default" : "secondary"} className="text-xs">
-                                                    {event.is_active ? 'Active' : 'Inactive'}
-                                                </Badge>
-                                            </div>
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
+                        <div className="flex gap-4">
+                            <div className="w-full grid gap-2">
+                                <Label htmlFor="event-select">Choose Event *</Label>
+                                <Select value={selectedEventId} onValueChange={setSelectedEventId}>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Select an event..." />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {eventListQuery.data?.events?.map((event) => (
+                                            <SelectItem key={event.id} value={event.id.toString()}>
+                                                <div className="flex items-center gap-2">
+                                                    <span>{event.name}</span>
+                                                    <Badge variant={event.is_active ? "default" : "secondary"} className="text-xs">
+                                                        {event.is_active ? 'Active' : 'Inactive'}
+                                                    </Badge>
+                                                </div>
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+
+                            </div>
+                            <div className="w-full grid gap-2">
+                                <Label>Select A mode *</Label>
+                                <CustomSelect 
+                                    options={[
+                                        {label:'1st Mode',value:'mode1'},
+                                        {label:'2nd Mode',value:'mode2'}
+                                    ]}
+                                    value={selectedMode}
+                                    onValueChange={e=>setSelectedMode(e)}
+                                />
+                            </div>
                         </div>
 
                         {/* Event Info */}
@@ -372,13 +400,15 @@ const QuestionPaperPage = () => {
                                 key={question.id}
                                 question={question}
                                 index={index}
-                                isSelected={selectedQuestionId?.includes(question.id ?? '')}
-                                onSelect={(id) =>
-                                    setSelectedQuestionId((prev) =>
-                                        prev.includes(id)
-                                            ? prev.filter((qId) => qId !== id)
-                                            : [...prev, id]
-                                    )
+                                isSelected={ selectedMode === 'mode1'? selectedQuestionId?.includes(question.id ?? ''):(selectedMode2Question == question.id)}
+                                onSelect={(id) =>{
+                                        selectedMode === 'mode1'?
+                                        setSelectedQuestionId((prev) =>
+                                            prev.includes(id)
+                                                ? prev.filter((qId) => qId !== id)
+                                                : [...prev, id]
+                                        ):setSelectedMode2Question(id)
+                                    }
                                 }
 
                                 isCurrentLive={selectedEvent?.liveQuestion?.id === question.id}
@@ -421,7 +451,7 @@ const QuestionSelectionCard = ({
                 isSelected && "ring-2 ring-blue-500 bg-blue-50/50 dark:bg-blue-950/50",
                 isCurrentLive && "ring-2 ring-green-500 bg-green-50/50 dark:bg-green-950/50"
             )}
-            onClick={() => onSelect(question.id)}
+            onClick={() => onSelect(question.id as string)}
         >
             <CardHeader>
                 <div className="flex justify-between items-start">

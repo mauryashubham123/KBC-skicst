@@ -17,8 +17,10 @@ export const MainEventsPage = () => {
         staleTime: Infinity,
     });
     useEffect(() => {
+        console.log('use Effect triggred');
         if (eventUpdates.data) {
-            if (eventUpdates.data.data.event && counterRef.current === 0) {
+            console.log('update received');
+            if (eventUpdates.data.data.event) {
                 counterRef.current++;
             }
             eventUpdates.refetch();
@@ -33,15 +35,9 @@ export const MainEventsPage = () => {
                         !eventUpdates.data?.data?.event?.is_active ?
                             <WaitingIllustration  event={eventUpdates.data?.data?.event} />
                         :
-                        eventUpdates.data?.data?.answers ?
-                        <>
-                            <EventScoreDisplay  
-                                event={eventUpdates.data?.data?.event}
-                                answers={eventUpdates.data?.data?.answers}
-                                isLoading={eventUpdates.isLoading} />
-                        </>
-                        :
-                        <EventQuestionShow event={eventUpdates.data?.data?.event} />
+                        eventUpdates.data?.data?.answers 
+                        ? <EventScoreDisplay event={eventUpdates.data?.data?.event} userAnswers={eventUpdates.data?.data?.answers} isLoading={eventUpdates.isLoading} />
+                        : <EventQuestionShow eventData={eventUpdates} />
                      }
 
                 </div>
@@ -49,3 +45,4 @@ export const MainEventsPage = () => {
         </>
     )
 }
+

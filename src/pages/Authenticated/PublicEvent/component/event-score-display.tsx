@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Trophy, Star, Medal, CheckCircle, Clock, Users, Target } from 'lucide-react';
 
 // Main Score Display Component
-const EventScoreDisplay = ({ event, userAnswers }) => {
+const EventScoreDisplay = ({ event, userAnswers }: { event: any; userAnswers: any; isLoading: boolean }) => {
   const [showAnimation, setShowAnimation] = useState(false);
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
 
   // Motivational messages based on score
-  const getMotivationalMessages = (scorePercentage) => {
+  const getMotivationalMessages = (scorePercentage: number) => {
     if (scorePercentage >= 90) {
       return [
         "🌟 अद्भुत! आप एक सच्चे चैंपियन हैं!",
@@ -63,7 +63,7 @@ const EventScoreDisplay = ({ event, userAnswers }) => {
   }, [messages.length]);
 
   // Get trophy icon based on score
-  const getTrophyIcon = (percentage) => {
+  const getTrophyIcon = (percentage: number) => {
     if (percentage >= 90) return <Trophy className="w-16 h-16 text-yellow-500" />;
     if (percentage >= 70) return <Medal className="w-16 h-16 text-orange-500" />;
     if (percentage >= 50) return <Star className="w-16 h-16 text-blue-500" />;

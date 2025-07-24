@@ -56,6 +56,7 @@ export const kbc = {
         getQuestionList: (parameters?:string|null) => get(`/kbc-question/list?${parameters}`),
         updateQuestion: (data:FormData, id:string|number) => post(`/kbc-question/update/${id}`, data),
         deleteQuestion: (id:string|number) => del(`/kbc-question/delete/${id}`),  //complete
+        firstModeResult: (id:string|number) => get(`kbc-event/get-first-model-result/${id}`),
     },
     audiance_apis: {
         subscribeEvent: (parameters:string) => get('/kbc-audience/subscribe-event?event_id=' + parameters), 

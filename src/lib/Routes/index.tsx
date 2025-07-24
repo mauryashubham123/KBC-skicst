@@ -13,6 +13,7 @@ import { eventManagementRoutes } from './modules/eventManagementRoutes';
 import QuestionPaperPage from '@/pages/Authenticated/Events/Components/set-event-question-dialog';
 import { PublicEventPage } from '@/pages/Authenticated/PublicEvent/publicEventPage';
 import { MainEventsPage } from '@/pages/Authenticated/main-events-page';
+import EventViewPage from '@/pages/Authenticated/Events/event-view-page';
 export const routes: RouteType[] = [
 	{
 		isMenu: true,
@@ -31,6 +32,15 @@ export const routes: RouteType[] = [
 		path: "/event-management/events/set-paper",
 		label: 'Set Question Paper',
 		component: <QuestionPaperPage />,
+		layout: 'main',
+		middlewares: ['auth'],
+		users: ['admin', 'super_admin', 'staff', 'reciptionist'],
+	},
+	{
+		isMenu: false,
+		path: "/event-management/events/view/:event_id",
+		label: 'event-view',
+		component: <EventViewPage />,
 		layout: 'main',
 		middlewares: ['auth'],
 		users: ['admin', 'super_admin', 'staff', 'reciptionist'],

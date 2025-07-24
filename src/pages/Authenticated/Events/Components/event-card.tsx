@@ -68,17 +68,6 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
         }
     });
 
-    // Reveal Answer Mutation
-    const revealAnswerMutation = useMutation({
-        mutationFn: () => kbc.event_apis.revealEventQuestionAnswer(`id=${event.id}`),
-        onSuccess: (res) => {
-            toast.success(res.message || 'Answer revealed successfully');
-            queryClient.invalidateQueries({ queryKey: ['events'] });
-        },
-        onError: (e: any) => {
-            toast.error(e?.response?.data?.message || e.message || 'Failed to reveal answer');
-        }
-    });
 
     const formatDateTime = (dateString: string) => {
         const date = new Date(dateString);
@@ -162,7 +151,6 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
 
                 {/* Action Buttons */}
                 <div className="flex flex-wrap gap-2">
-                    {/* Edit Event */}
 
                     {/* Toggle Status */}
                     <Button
@@ -184,61 +172,18 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
                         )}
                     </Button>
 
-                    {/* Lock/Unlock Question */}
-                    {/* {event.liveQuestion && ( */}
-                    {
-                        toggleLockMutation.isPending ? (
-                            <Button variant="outline" size="sm" disabled>
-                                <Loader2 className="size-3 mr-1 animate-spin" />
-                                {event.is_locked ? 'Unlocking...' : 'Locking...'}
-                            </Button>
-                        ) : (
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => toggleLockMutation.mutate(event.is_locked ? 'unlocked' : 'locked')}
-                                disabled={toggleLockMutation.isPending}
-                            >
-                                {event.is_locked ? (
-                                    <>
-                                        <Unlock className="size-3 mr-1" />
-                                        Unlock
-                                    </>
-                                ) : (
-                                    <>
-                                        <Lock className="size-3 mr-1" />
-                                        Lock
-                                    </>
-                                )}
-                            </Button>
-                        )
-                    }
-
-                    {/* )} */}
-
-                    {/* Reveal Answer */}
-                    {/* {event.liveQuestion && !event.answer_reveal && (
-                        <Button
-                            variant="secondary"
-                            size="sm"
-                            onClick={() => revealAnswerMutation.mutate()}
-                            disabled={revealAnswerMutation.isPending}
-                        >
-                            <Eye className="size-3 mr-1" />
-                            Reveal
-                        </Button>
-                    )} */}
-
-
+                   
+                    
+                    {/* View Event */}
                     <Button
                         variant="secondary"
                         size="sm"
-                        onClick={() => navigate('/event-management/events/set-paper?event_id='+event.id )}
-                        disabled={revealAnswerMutation.isPending}
+                        onClick={() => navigate('/event-management/events/view/' + event.id)}
                     >
                         <Eye className="size-3 mr-1" />
-                        Set Question
+                        View
                     </Button>
+
                     {/* Delete Event */}
                     <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
                         <AlertDialogTrigger asChild>
