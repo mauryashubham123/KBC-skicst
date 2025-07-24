@@ -14,13 +14,13 @@ const EventScoreDisplay = ({ event, userAnswers }: { event: any; userAnswers: an
         "🏆 आपका प्रदर्शन शानदार रहा!",
         "✨ आप इस quiz के विजेता हैं!"
       ];
-    } else if (scorePercentage >= 70) {
+    } else if (event.score >= 70) {
       return [
         "👏 बहुत बढ़िया! आपने अच्छा प्रदर्शन किया!",
         "🎯 आप सही राह पर हैं!",
         "💪 आपकी मेहनत रंग लाई!"
       ];
-    } else if (scorePercentage >= 50) {
+    } else if (event.score >= 50) {
       return [
         "📚 अच्छी कोशिश! और भी बेहतर कर सकते हैं!",
         "🌱 आप सीख रहे हैं, यही सबसे जरूरी है!",
@@ -35,20 +35,7 @@ const EventScoreDisplay = ({ event, userAnswers }: { event: any; userAnswers: an
     }
   };
 
-  // Calculate dummy score (you can replace with real calculation)
-  const calculateScore = () => {
-    if (!userAnswers || !event?.questions) return { correct: 0, total: 0, percentage: 0 };
-    
-    // Dummy calculation for demo
-    const total = event.questions.length;
-    const correct = Math.floor(Math.random() * total); // Replace with real logic
-    const percentage = Math.round((correct / total) * 100);
-    
-    return { correct, total, percentage };
-  };
-
-  const score = calculateScore();
-  const messages = getMotivationalMessages(score.percentage);
+  const messages = getMotivationalMessages(0);
 
   // Animation effects
   useEffect(() => {
@@ -101,7 +88,7 @@ const EventScoreDisplay = ({ event, userAnswers }: { event: any; userAnswers: an
             }`}>
               <div className="mb-4 flex justify-center">
                 <div className="animate-bounce">
-                  {getTrophyIcon(score.percentage)}
+                  {getTrophyIcon(answers.score)}
                 </div>
               </div>
               <h1 className="text-3xl font-bold mb-2">🎉 Quiz पूर्ण! 🎉</h1>
@@ -117,17 +104,17 @@ const EventScoreDisplay = ({ event, userAnswers }: { event: any; userAnswers: an
               {/* Main Score Display */}
               <div className="bg-gradient-to-br from-amber-100 to-orange-100 rounded-2xl p-8 mb-6 border border-amber-200">
                 <div className="text-6xl font-bold text-amber-700 mb-2 animate-pulse">
-                  {score.percentage}%
+                  {answers?.score}
                 </div>
                 <div className="text-xl text-gray-700 mb-4">
-                  {score.correct} / {score.total} सही उत्तर
+                  स्कोर 
                 </div>
                 
                 {/* Progress Bar */}
                 <div className="w-full bg-gray-200 rounded-full h-4 mb-4">
                   <div
                     className="bg-gradient-to-r from-amber-500 to-orange-500 h-4 rounded-full transition-all duration-2000 ease-out"
-                    style={{ width: `${score.percentage}%` }}
+                    style={{ width: `${answers?.score}%` }}
                   ></div>
                 </div>
               </div>
@@ -152,75 +139,7 @@ const EventScoreDisplay = ({ event, userAnswers }: { event: any; userAnswers: an
               </div>
             </div>
 
-            {/* Stats Cards */}
-            <div className={`grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 transform transition-all duration-1000 delay-700 ${
-              showAnimation ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
-            }`}>
-              <div className="bg-green-50 rounded-lg p-4 border border-green-200 text-center">
-                <CheckCircle className="w-8 h-8 text-green-600 mx-auto mb-2" />
-                <div className="text-2xl font-bold text-green-700">{score.correct}</div>
-                <div className="text-sm text-green-600">सही उत्तर</div>
-              </div>
-              
-              <div className="bg-red-50 rounded-lg p-4 border border-red-200 text-center">
-                <Clock className="w-8 h-8 text-red-600 mx-auto mb-2" />
-                <div className="text-2xl font-bold text-red-700">{score.total - score.correct}</div>
-                <div className="text-sm text-red-600">गलत उत्तर</div>
-              </div>
-              
-              <div className="bg-blue-50 rounded-lg p-4 border border-blue-200 text-center">
-                <Users className="w-8 h-8 text-blue-600 mx-auto mb-2" />
-                <div className="text-2xl font-bold text-blue-700">{score.total}</div>
-                <div className="text-sm text-blue-600">कुल प्रश्न</div>
-              </div>
-            </div>
-
-            {/* Event Info */}
-            <div className={`bg-amber-50 rounded-lg p-6 border border-amber-200 transform transition-all duration-1000 delay-900 ${
-              showAnimation ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
-            }`}>
-              <h3 className="text-lg font-bold text-amber-800 mb-3 text-center">
-                📊 Quiz विवरण
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Quiz नाम:</span>
-                  <span className="font-semibold">{event?.title || 'KBC Quiz'}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">कुल समय:</span>
-                  <span className="font-semibold">{score.total * 30} सेकंड</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">औसत समय:</span>
-                  <span className="font-semibold">30 सेकंड/प्रश्न</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">प्रदर्शन:</span>
-                  <span className={`font-semibold ${
-                    score.percentage >= 70 ? 'text-green-600' : 
-                    score.percentage >= 50 ? 'text-yellow-600' : 'text-red-600'
-                  }`}>
-                    {score.percentage >= 70 ? 'उत्कृष्ट' : 
-                     score.percentage >= 50 ? 'अच्छा' : 'सुधार की जरूरत'}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Action Buttons */}
-            <div className={`text-center mt-8 transform transition-all duration-1000 delay-1100 ${
-              showAnimation ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
-            }`}>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <button className="bg-gradient-to-r from-amber-600 to-orange-600 text-white px-8 py-3 rounded-lg font-bold hover:from-amber-700 hover:to-orange-700 transition-all duration-200 transform hover:scale-105 shadow-lg">
-                  🏠 होम पेज पर जाएं
-                </button>
-                <button className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-3 rounded-lg font-bold hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 transform hover:scale-105 shadow-lg">
-                  🔄 दोबारा खेलें
-                </button>
-              </div>
-            </div>
+     
           </div>
         </div>
 
