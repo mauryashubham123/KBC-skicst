@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { KbcEventType } from "@/types/user";
 import { Calendar, CheckCircle, Clock, Eye, Lock, Play, Unlock, Users } from "lucide-react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { kbc } from "@/lib/helpers/api_urls";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";

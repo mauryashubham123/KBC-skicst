@@ -77,12 +77,7 @@ const QuestionPage = () => {
         gcTime: 10 * 60 * 1000, // 10 minutes
     });
 
-    const difficultyOptions = [
-        { label: 'All Difficulty', value: '' },
-        { label: 'Easy', value: 'easy' },
-        { label: 'Medium', value: 'medium' },
-        { label: 'Hard', value: 'hard' }
-    ];
+
 
     const clearFilters = () => {
         setCourse('');

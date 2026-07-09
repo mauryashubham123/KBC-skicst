@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Loader2, Trophy, Clock, Calendar, CheckCircle, Gift, Info, Users, Star, Play, X } from 'lucide-react';
-import kbcheader from "@/assets/kbc_header.jpg";
+import { Loader2, Trophy, Clock, CheckCircle, Gift, Info, Users, Star, Play, X } from 'lucide-react';
+import logoSmImg from "@/assets/logofile.png";
+import championImg from "@/assets/champion.png";
 type Obstacle = {
   x: number;
   width: number;
@@ -15,7 +16,7 @@ export default function AudienceDashboard() {
     minutes: 0,
     seconds: 0
   });
-  
+
   const [isLoading, setIsLoading] = useState(true);
   const [registrationStatus, setRegistrationStatus] = useState('pending');
   const [showNotification, setShowNotification] = useState(false);
@@ -28,8 +29,8 @@ export default function AudienceDashboard() {
   const [gameOver, setGameOver] = useState(false);
 
   // Competition dates
-  const reportingTime = new Date('2025-07-25T10:00:00'); // 10:00 AM
-  const competitionTime = new Date('2025-07-25T12:00:00'); // 12:00 PM
+  const reportingTime = new Date('2026-07-20T10:00:00'); // 10:00 AM
+  const competitionTime = new Date('2026-07-20T12:00:00'); // 12:00 PM
 
   useEffect(() => {
     const loadingTimer = setTimeout(() => {
@@ -56,7 +57,7 @@ export default function AudienceDashboard() {
     };
   }, []);
 
-  // Check if competition is active (after 12:00 PM on 25 July)
+  // Check if competition is active (after 12:00 PM on 20 July)
   const isCompetitionActive = () => {
     const now = new Date().getTime();
     return now >= competitionTime.getTime();
@@ -92,29 +93,29 @@ export default function AudienceDashboard() {
     const gameLoop = setInterval(() => {
       if (!gameOver) {
         setScore(prev => prev + 1);
-        
+
         setObstacles(prev => {
           const newObstacles = prev.map(obs => ({ ...obs, x: obs.x - 5 }))
             .filter(obs => obs.x > -50);
-          
+
           if (Math.random() < 0.02) {
             newObstacles.push({ x: 800, y: 150, width: 20, height: 40 });
           }
-          
+
           return newObstacles;
         });
 
         setObstacles(prev => {
-          const collision = prev.some(obs => 
-            obs.x < 80 && obs.x + obs.width > 50 && 
+          const collision = prev.some(obs =>
+            obs.x < 80 && obs.x + obs.width > 50 &&
             dinoPosition < obs.height
           );
-          
+
           if (collision) {
             setGameOver(true);
             setGameActive(false);
           }
-          
+
           return prev;
         });
       }
@@ -125,10 +126,10 @@ export default function AudienceDashboard() {
 
   const jump = () => {
     if (isJumping || gameOver) return;
-    
+
     setIsJumping(true);
     setDinoPosition(60);
-    
+
     setTimeout(() => {
       setDinoPosition(0);
       setIsJumping(false);
@@ -187,7 +188,7 @@ export default function AudienceDashboard() {
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-orange-50 flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="w-16 h-16 text-orange-500 animate-spin mx-auto mb-4" />
-            <p className="text-slate-700 text-xl font-semibold">
+          <p className="text-slate-700 text-xl font-semibold">
             KBC अनुभव लोड हो रहा है...<br />
             <span className="text-base text-slate-600">Loading KBC Experience...</span>
           </p>
@@ -229,7 +230,7 @@ export default function AudienceDashboard() {
                 <p className="text-lg font-medium text-slate-600 mt-1">Rules & Terms</p>
               </div>
             </h2>
-            
+
             <div className="space-y-6 text-slate-700">
               <div className="bg-orange-50 border-l-4 border-orange-500 p-6 rounded-lg">
                 <h3 className="font-bold text-xl mb-3 flex items-center gap-2 text-slate-800">
@@ -273,10 +274,22 @@ export default function AudienceDashboard() {
                 <ul className="space-y-2 text-base">
                   <li>• समय खत्म होने से पहले अंतिम उत्तर की पुष्टि करनी होगी | Must confirm final answer before time runs out</li>
                   <li>• प्रत्येक लाइफलाइन का उपयोग केवल एक बार किया जा सकता है | Each lifeline can be used only once</li>
-                  <li>• आप कभी भी छोड़ सकते हैं और वर्तमान इनाम ले सकते हैं | You can quit anytime and take current prize</li>
-                  <li>• प्रश्न 6-10 पर गलत उत्तर: ₹10,000 तक गिर जाएगा | Wrong answer on Q6-10: drops to ₹10,000</li>
-                  <li>• प्रश्न 11-15 पर गलत उत्तर: ₹3,20,000 तक गिर जाएगा | Wrong answer on Q11-15: drops to ₹3,20,000</li>
+                  <li>• आप कभी भी छोड़ (Quit) सकते हैं और उस लेवल का पुरस्कार ले सकते हैं | You can quit anytime and take the current level prize</li>
+                  <li>• गलत उत्तर देने पर: अंतिम सही पार किए गए लेवल का पुरस्कार मिलेगा | Wrong answer: you get the prize of the last successfully completed Level</li>
                 </ul>
+                <div className="mt-4 pt-4 border-t border-red-200">
+                  <h4 className="font-bold text-slate-800 mb-2">लेवल और पुरस्कार (Levels & Prizes):</h4>
+                  <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-slate-700">
+                    <li>🏆 <strong>1st Level (Q1-2):</strong> Pen + Key Chain 🖊️🔑</li>
+                    <li>🏆 <strong>2nd Level (Q3-4):</strong> Mobile Stand 📱</li>
+                    <li>🏆 <strong>3rd Level (Q5-7):</strong> Bottle 🧴</li>
+                    <li>🏆 <strong>4th Level (Q8-9):</strong> Coffee Mug ☕</li>
+                    <li>🏆 <strong>5th Level (Q10-12):</strong> Selfie Stick 🤳</li>
+                    <li>🏆 <strong>6th Level (Q13):</strong> Bluetooth Ear Phone 🎧</li>
+                    <li>🏆 <strong>7th Level (Q14):</strong> Buffer Sound 🔊</li>
+                    <li>🏆 <strong>8th Level (Q15):</strong> Computer (कंप्यूटर) 🖥️🏆</li>
+                  </ul>
+                </div>
               </div>
             </div>
 
@@ -290,22 +303,75 @@ export default function AudienceDashboard() {
         </div>
       )}
 
-      {/* Header */}
-      <div className="bg-white border-b border-slate-200 shadow-sm">
-        <div className="max-w-6x mx-auto">
-          <div className="text-center">
-           <div className="w-full">
-								<img
-									src={kbcheader}
-									alt="KAUN BANEGA CHAMPION Header"
-									className="w-full h-auto object-cover shadow-2xl"
-								/>
-							</div>
+      <div className="max-w-6xl mx-auto px-4 py-8">
+        <div className="bg-gradient-to-r from-[#3e0b6b] via-[#1b0234] to-[#3e0b6b] text-white rounded-2xl shadow-xl p-6 md:p-8 mb-8 relative overflow-hidden border border-[#5a189a]/30">
+          <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-purple-500 rounded-full opacity-15 blur-xl"></div>
+          <div className="absolute bottom-0 left-0 -mb-4 -ml-4 w-32 h-32 bg-indigo-500 rounded-full opacity-15 blur-2xl"></div>
+
+          <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
+            {/* Logos Row for Mobile (shown only on mobile) */}
+            <div className="flex justify-center gap-6 items-center w-full md:hidden mb-4">
+              {/* Champion Logo on mobile */}
+              <div className="w-20 h-20 rounded-full bg-gradient-to-r from-[#3e0b6b] via-[#1b0234] to-[#3e0b6b] flex items-center justify-center p-2.5 shadow-lg border-2 border-purple-500/20">
+                <img
+                  src={championImg}
+                  alt="Champion Icon"
+                  className="w-full h-full object-contain"
+                />
+              </div>
+              {/* Institute Logo on mobile */}
+              <div className="w-20 h-20 rounded-full bg-gradient-to-r from-[#f1f1f1] via-[#f1f1f1] to-[#f1f1f1] flex items-center justify-center p-2.5 shadow-lg border-2 border-purple-500/20">
+                <img
+                  src={logoSmImg}
+                  alt="SKICST Logo"
+                  className="w-full h-full object-contain"
+                />
+              </div>
+            </div>
+
+            {/* Left side: Champion Icon (Desktop only) */}
+            <div className="hidden md:block flex-shrink-0">
+              <div className="w-28 h-28 lg:w-32 lg:h-32 rounded-full bg-gradient-to-r from-[#3e0b6b] via-[#1b0234] to-[#3e0b6b] flex items-center justify-center p-3 shadow-xl border-2 border-purple-500/30 hover:scale-105 transition-transform duration-300">
+                <img
+                  src={championImg}
+                  alt="Champion Icon"
+                  className="w-full h-full object-contain"
+                />
+              </div>
+            </div>
+
+            {/* Center Content */}
+            <div className="flex-1 text-center flex flex-col items-center justify-center">
+              <span className="bg-purple-500/20 text-purple-300 border border-purple-500/30 text-xs md:text-sm uppercase tracking-widest px-4 py-1.5 rounded-full font-bold">
+                S.K. INSTITUTE OF COMPUTER SCIENCE & TECHNOLOGY
+              </span>
+              <h1 className="text-3xl md:text-4xl font-extrabold mt-4 mb-2 tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 via-amber-300 to-yellow-100 drop-shadow-md">
+                🏆  Kaun Banega Champion - 2026
+              </h1>
+              <p className="text-purple-200 text-sm md:text-lg mt-3 font-medium">
+                Foundation Day Celebrating Program
+              </p>
+              <p className="text-purple-100 font-semibold text-md md:text-xl mt-1">
+                "ज्ञान से आत्मविश्वास, कौशल से पहचान, सफलता से सम्मान"
+              </p>
+              <p className="text-purple-300 text-sm md:text-lg mt-2 font-medium">
+                संकल्प और सिद्धि-2026
+              </p>
+              <div className="w-24 h-1 bg-gradient-to-r from-transparent via-amber-400 to-transparent mx-auto mt-2 rounded-full"></div>
+            </div>
+
+            {/* Right side: Institute Logo (Desktop only) */}
+            <div className="hidden md:block flex-shrink-0">
+              <div className="w-28 h-28 lg:w-32 lg:h-32 rounded-full bg-gradient-to-r from-[#f1f1f1] via-[#f1f1f1] to-[#f1f1f1] flex items-center justify-center p-3 shadow-xl border-2 border-purple-500/30 hover:scale-105 transition-transform duration-300">
+                <img
+                  src={logoSmImg}
+                  alt="SKICST Logo"
+                  className="w-full h-full object-contain"
+                />
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-
-      <div className="max-w-6xl mx-auto px-4 py-8">
         {/* Event Info */}
         <div className="bg-white rounded-2xl p-8 mb-8 shadow-lg border border-slate-200">
           <div className="grid md:grid-cols-2 gap-8 items-center">
@@ -324,17 +390,10 @@ export default function AudienceDashboard() {
               </p>
               <div className="space-y-3">
                 <div className="flex items-center gap-4 text-slate-700 bg-slate-50 p-4 rounded-xl border border-slate-200">
-                  <Calendar className="w-6 h-6 text-orange-500" />
-                  <div>
-                    <span className="font-bold">रिपोर्टिंग: 25 जुलाई 2025 - सुबह 10:00 बजे</span>
-                    <span className="block text-sm text-slate-600">Reporting: 25 July 2025 - 10:00 AM</span>
-                  </div>
-                </div>
-                <div className="flex items-center gap-4 text-slate-700 bg-slate-50 p-4 rounded-xl border border-slate-200">
                   <Clock className="w-6 h-6 text-orange-500" />
                   <div>
-                    <span className="font-bold">प्रतियोगिता: 25 जुलाई 2025 - दोपहर 12:00 बजे</span>
-                    <span className="block text-sm text-slate-600">Competition: 25 July 2025 - 12:00 PM</span>
+                    <span className="font-bold">प्रतियोगिता: 20 जुलाई 2026 - सुबह 10:30 बजे</span>
+                    <span className="block text-sm text-slate-600">Competition: 20 July 2026 - 10:30 AM</span>
                   </div>
                 </div>
               </div>
@@ -387,7 +446,7 @@ export default function AudienceDashboard() {
               <div key={index} className="text-center">
                 <div className="bg-gradient-to-br from-orange-50 to-red-50 border-2 border-orange-300 rounded-2xl  mb-3 shadow-lg">
                   <div className="md:text-4xl text-xl font-bold text-orange-600">
-                    {item.value.toString().padStart(2, '0')}    
+                    {item.value.toString().padStart(2, '0')}
                   </div>
                 </div>
                 <p className="text-sm text-slate-600 font-medium">{item.label}</p>
@@ -448,9 +507,8 @@ export default function AudienceDashboard() {
             <div className="absolute bottom-0 w-full h-3 bg-green-400"></div>
 
             <div
-              className={`absolute bottom-10 left-16 w-10 h-10 bg-emerald-500 rounded-full transition-all duration-300 shadow-lg ${
-                isJumping ? 'transform -translate-y-16' : ''
-              }`}
+              className={`absolute bottom-10 left-16 w-10 h-10 bg-emerald-500 rounded-full transition-all duration-300 shadow-lg ${isJumping ? 'transform -translate-y-16' : ''
+                }`}
               style={{ bottom: `${40 + dinoPosition}px` }}
             >
               <div className="w-full h-full flex items-center justify-center text-white text-lg font-bold">
@@ -527,15 +585,14 @@ export default function AudienceDashboard() {
                   </div>
                 </div>
               </div>
-              
+
               <button
                 onClick={handleCompetitionJoin}
                 disabled={!isCompetitionActive()}
-                className={`w-full font-bold py-5 px-8 rounded-2xl transition-all duration-300 shadow-lg text-xl flex items-center justify-center gap-4 ${
-                  isCompetitionActive() 
-                    ? 'bg-emerald-500 hover:bg-emerald-600 text-white hover:shadow-xl transform hover:scale-105 cursor-pointer' 
-                    : 'bg-slate-300 text-slate-500 cursor-not-allowed'
-                }`}
+                className={`w-full font-bold py-5 px-8 rounded-2xl transition-all duration-300 shadow-lg text-xl flex items-center justify-center gap-4 ${isCompetitionActive()
+                  ? 'bg-emerald-500 hover:bg-emerald-600 text-white hover:shadow-xl transform hover:scale-105 cursor-pointer'
+                  : 'bg-slate-300 text-slate-500 cursor-not-allowed'
+                  }`}
               >
                 {isCompetitionActive() ? (
                   <>
@@ -563,7 +620,7 @@ export default function AudienceDashboard() {
       <footer className="bg-white border-t border-slate-200 py-8 mt-8">
         <div className="max-w-6xl mx-auto px-4 text-center">
           <p className="text-slate-600 text-base">
-            © 2025 KBC - कौन बनेगा चैंपियन। सभी अधिकार सुरक्षित।
+            © 2026 KBC - कौन बनेगा चैंपियन। सभी अधिकार सुरक्षित।
           </p>
           <p className="text-slate-500 text-sm mt-2">
             ज्ञान और सपनों द्वारा संचालित | Powered by Knowledge and Dreams
