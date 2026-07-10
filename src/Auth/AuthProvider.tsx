@@ -12,64 +12,89 @@ import { toast } from "sonner";
 type AuthContext = {
     authToken?: string | null;
     user?: UserType | null;
-    handleLogin:(data:FormData)=>void;
-    handleLogout:()=>void;
-    handleRegister:(data:FormData)=>void;
-    isLoading:boolean;
+    handleLogin: (data: FormData) => void;
+    handleLogout: () => void;
+    handleRegister: (data: FormData) => void;
+    isLoading: boolean;
+    refreshUser: () => Promise<any>;
 }
 
 const AuthContext = createContext<AuthContext | undefined>(undefined);
 type AuthProviderProps = PropsWithChildren;
-const AuthProvider =  ({children}:AuthProviderProps) => {
-    const [token,setToken] = useState<string | null>();
-    const [user,setUser] = useState<UserType | null>();
-    const [isLoading,setIsLoading] = useState(false);
+const AuthProvider = ({ children }: AuthProviderProps) => {
+    const [token, setToken] = useState<string | null>();
+    const [user, setUser] = useState<UserType | null>();
+    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
-    useEffect(()=>{
+    useEffect(() => {
         setIsLoading(true);
-        auth.validate().then((res:any)=>{
+        auth.validate().then((res: any) => {
             setUser(res.data.user)
             setToken(Cookies.get('_token'))
-        }).catch(e=>{
+        }).catch(e => {
             console.log(e);
             setUser(null);
             setToken(null);
-        }).finally(()=>setIsLoading(false));
-    },[])
-    const handleLogin = (data:FormData) => {
+        }).finally(() => setIsLoading(false));
+    }, [])
+    const handleLogin = (data: FormData) => {
         setIsLoading(true);
-        auth.login(data).then((res:any)=>{
+        auth.login(data).then((res: any) => {
             setUser(res.data.user);
             console.log(res.data.user);
             setToken(res._token);
-            Cookies.set('_token',res._token);
-            navigate('/dashboard');
-        }).catch((e:any)=>toast.error(e.response?.data?.message ?? e.message)).finally(()=>setIsLoading(false));
+            Cookies.set('_token', res._token);
+            if (res.data.user.role.type === 'pending') {
+                navigate('/payment')
+            } else {
+                navigate('/dashboard');
+            }
+        }).catch((e: any) => toast.error(e.response?.data?.message ?? e.message)).finally(() => setIsLoading(false));
     };
-    const handleRegister = (data:FormData) => {
+    const handleRegister = (data: FormData) => {
         setIsLoading(true);
-        auth.register(data).then((res:any)=>{
+        auth.register(data).then((res: any) => {
             setUser(res.data.user);
             setToken(res._token);
-            Cookies.set('_token',res._token);
-            navigate('/dashboard');
-        }).catch((e:any)=>toast.error(e.response?.data?.message ?? e.message)).finally(()=>setIsLoading(false));
+            Cookies.set('_token', res._token);
+            if (res.data.user.role.type === 'pending') {
+                navigate('/payment')
+            } else {
+                navigate('/dashboard');
+            }
+        }).catch((e: any) => toast.error(e.response?.data?.message ?? e.message)).finally(() => setIsLoading(false));
     };
     const handleLogout = () => {
         setIsLoading(true);
-        auth.logout().then(():any=>{
+        auth.logout().then((): any => {
             removeAuthToken();
             setUser(null);
             setToken(null);
             navigate('/');
-        }).catch(e=>toast.error(e.response?.data?.message ?? e.message)).finally(()=>setIsLoading(false));
-    }
-    return <AuthContext.Provider value={{authToken:token, user,handleLogin,handleLogout,handleRegister,isLoading}}>{children}</AuthContext.Provider>
+        }).catch(e => toast.error(e.response?.data?.message ?? e.message)).finally(() => setIsLoading(false));
+    };
+    const refreshUser = async () => {
+        setIsLoading(true);
+        try {
+            const res: any = await auth.validate();
+            setUser(res.data.user);
+            setToken(Cookies.get('_token'));
+            return res.data.user;
+        } catch (e) {
+            console.log(e);
+            setUser(null);
+            setToken(null);
+            throw e;
+        } finally {
+            setIsLoading(false);
+        }
+    };
+    return <AuthContext.Provider value={{ authToken: token, user, handleLogin, handleLogout, handleRegister, isLoading, refreshUser }}>{children}</AuthContext.Provider>
 }
 export default AuthProvider;
 export const useAuth = () => {
     const context = useContext(AuthContext)
-    if(context === undefined){
+    if (context === undefined) {
         throw new Error("useAuth Hook must be used inside AuthProvider")
     }
     return context

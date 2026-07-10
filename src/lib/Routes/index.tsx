@@ -14,6 +14,7 @@ import QuestionPaperPage from '@/pages/Authenticated/Events/Components/set-event
 import { PublicEventPage } from '@/pages/Authenticated/PublicEvent/publicEventPage';
 import { MainEventsPage } from '@/pages/Authenticated/main-events-page';
 import EventViewPage from '@/pages/Authenticated/Events/event-view-page';
+import PaymentPage from '@/pages/Authenticated/PendingUser/PaymentPage';
 export const routes: RouteType[] = [
 	{
 		isMenu: true,
@@ -23,6 +24,7 @@ export const routes: RouteType[] = [
 		component: <Dashboard />,
 		layout: 'main',
 		middlewares: ['auth'],
+		users: ['admin', 'super_admin', 'staff', 'reciptionist', 'student', 'visitor'],
 	},
 	...audianceRoutes,
 	...eventManagementRoutes,
@@ -65,6 +67,19 @@ export const routes: RouteType[] = [
 		middlewares: ['auth'],
 		users: ['student', 'visitor'],
 	},
+
+	// pending user routes
+	{
+		isMenu: false,
+		path: "/payment",
+		icon: PartyPopper,
+		label: 'payment',
+		component: <PaymentPage />,
+		layout: 'public',
+		middlewares: ['auth'],
+		users: ['pending'],
+	},
+
 	// Public Routes
 	{
 		isMenu: false,
@@ -75,7 +90,7 @@ export const routes: RouteType[] = [
 		layout: 'public',
 		middlewares: ['guest'],
 	},
-	
+
 	{
 		isMenu: false,
 		label: 'Home',

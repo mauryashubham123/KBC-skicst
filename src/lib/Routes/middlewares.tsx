@@ -14,8 +14,14 @@ export const Middleware: React.FC<MiddlewareProps> = ({ children, middlewares })
         return <LandingPageSkeleton />
     if (middlewares.includes('auth'))
         return authToken !== null ? children : <Navigate to={'/'} />
-    if (middlewares.includes('guest'))
-        return authToken == null ? children : <Navigate to={'/dashboard'} />
+    if (middlewares.includes('guest')) {
+        if (authToken == null) return children
+        else {
+            const { user } = useAuth();
+            if (user?.role?.type === 'pending') return <Navigate to={'/payment'} />
+            else return <Navigate to={'/dashboard'} />
+        }
+    }
     if (middlewares.includes('public'))
         return children;
     return children
