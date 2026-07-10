@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Loader2, Trophy, Clock, CheckCircle, Gift, Info, Users, Star, Play, X } from 'lucide-react';
+import { Loader2, Trophy, Clock, CheckCircle, Gift, Info, Users, Star, Play, X, Printer } from 'lucide-react';
 import logoSmImg from "@/assets/logofile.png";
 import championImg from "@/assets/champion.png";
+import { useAuth } from '@/Auth/AuthProvider';
+import PaymentReceipt from './components/PaymentReceipt';
+import { toast } from 'sonner';
 type Obstacle = {
   x: number;
   width: number;
@@ -10,6 +13,7 @@ type Obstacle = {
 };
 
 export default function AudienceDashboard() {
+  const { user } = useAuth();
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
     hours: 0,
@@ -31,6 +35,40 @@ export default function AudienceDashboard() {
   // Competition dates
   const reportingTime = new Date('2026-07-20T10:00:00'); // 10:00 AM
   const competitionTime = new Date('2026-07-20T12:00:00'); // 12:00 PM
+
+  const handlePrintReceipt = () => {
+    if (!user) {
+      toast.error("User details not found!");
+      return;
+    }
+    const printContent = document.getElementById("kbc-receipt-print-area")?.innerHTML;
+    const printWindow = window.open("", "_blank", "width=450,height=600");
+    if (!printWindow) {
+      toast.error("Popup blocked! Please allow popups to print/download the receipt.");
+      return;
+    }
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>KBC 2026 - Payment Receipt</title>
+          <script src="https://cdn.tailwindcss.com"></script>
+          <style>
+            @media print {
+              body { margin: 0; padding: 10px; background: white; }
+              @page { size: auto; margin: 0mm; }
+            }
+            body { font-family: monospace, sans-serif; background: #f8fafc; padding: 20px; }
+          </style>
+        </head>
+        <body onload="setTimeout(function() { window.print(); window.close(); }, 500);">
+          <div class="max-w-sm mx-auto">
+            ${printContent}
+          </div>
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+  };
 
   useEffect(() => {
     const loadingTimer = setTimeout(() => {
@@ -372,6 +410,55 @@ export default function AudienceDashboard() {
             </div>
           </div>
         </div>
+        {/* Countdown Timer */}
+        <div className="bg-white rounded-2xl p-8 mb-8 shadow-lg border border-slate-200">
+          <div className="relative flex items-center justify-center gap-3 mb-2">
+            <h3 className="text-3xl font-bold text-slate-800 text-center">
+              रिपोर्टिंग शुरू होगी में
+            </h3>
+            {user && (
+              <button
+                onClick={handlePrintReceipt}
+                className="inline-flex items-center justify-center p-2 text-slate-500 hover:text-blue-600 hover:bg-slate-100 rounded-lg transition-colors border border-slate-200/60 shadow-xs cursor-pointer bg-white"
+                title="रसीद प्रिंट करें / Print Receipt"
+              >
+                <Printer className="w-5 h-5" />
+              </button>
+            )}
+          </div>
+          <p className="text-center text-slate-600 mb-8">Reporting starts in</p>
+          <div className="grid grid-cols-4 gap-6 md:max-w-2xl max-w-sm mx-auto">
+            {[
+              { label: 'दिन | Days', value: timeLeft.days },
+              { label: 'घंटे | Hours', value: timeLeft.hours },
+              { label: 'मिनट | Minutes', value: timeLeft.minutes },
+              { label: 'सेकंड | Seconds', value: timeLeft.seconds }
+            ].map((item, index) => (
+              <div key={index} className="text-center">
+                <div className="bg-gradient-to-br from-orange-50 to-red-50 border-2 border-orange-300 rounded-2xl  mb-3 shadow-lg">
+                  <div className="md:text-4xl text-xl font-bold text-orange-600">
+                    {item.value.toString().padStart(2, '0')}
+                  </div>
+                </div>
+                <p className="text-sm text-slate-600 font-medium">{item.label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Rules & Instructions Button */}
+        <div className="text-center mb-8">
+          <button
+            onClick={() => setShowInstructions(true)}
+            className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-5 px-10 rounded-2xl transition-all duration-300 shadow-lg flex items-center gap-4 mx-auto text-lg hover:shadow-xl transform hover:scale-105"
+          >
+            <Info className="w-7 h-7" />
+            <div>
+              नियम और निर्देश पढ़ें
+              <span className="block text-sm font-medium">Read Rules & Instructions</span>
+            </div>
+          </button>
+        </div>
         {/* Event Info */}
         <div className="bg-white rounded-2xl p-8 mb-8 shadow-lg border border-slate-200">
           <div className="grid md:grid-cols-2 gap-8 items-center">
@@ -416,44 +503,6 @@ export default function AudienceDashboard() {
           </div>
         </div>
 
-        {/* Rules & Instructions Button */}
-        <div className="text-center mb-8">
-          <button
-            onClick={() => setShowInstructions(true)}
-            className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-5 px-10 rounded-2xl transition-all duration-300 shadow-lg flex items-center gap-4 mx-auto text-lg hover:shadow-xl transform hover:scale-105"
-          >
-            <Info className="w-7 h-7" />
-            <div>
-              नियम और निर्देश पढ़ें
-              <span className="block text-sm font-medium">Read Rules & Instructions</span>
-            </div>
-          </button>
-        </div>
-
-        {/* Countdown Timer */}
-        <div className="bg-white rounded-2xl p-8 mb-8 shadow-lg border border-slate-200">
-          <h3 className="text-3xl font-bold text-slate-800 text-center mb-2">
-            रिपोर्टिंग शुरू होगी में
-          </h3>
-          <p className="text-center text-slate-600 mb-8">Reporting starts in</p>
-          <div className="grid grid-cols-4 gap-6 md:max-w-2xl max-w-sm mx-auto">
-            {[
-              { label: 'दिन | Days', value: timeLeft.days },
-              { label: 'घंटे | Hours', value: timeLeft.hours },
-              { label: 'मिनट | Minutes', value: timeLeft.minutes },
-              { label: 'सेकंड | Seconds', value: timeLeft.seconds }
-            ].map((item, index) => (
-              <div key={index} className="text-center">
-                <div className="bg-gradient-to-br from-orange-50 to-red-50 border-2 border-orange-300 rounded-2xl  mb-3 shadow-lg">
-                  <div className="md:text-4xl text-xl font-bold text-orange-600">
-                    {item.value.toString().padStart(2, '0')}
-                  </div>
-                </div>
-                <p className="text-sm text-slate-600 font-medium">{item.label}</p>
-              </div>
-            ))}
-          </div>
-        </div>
 
         {/* Mini Game Section */}
         <div className="bg-white rounded-2xl p-8 mb-8 shadow-lg border border-slate-200">
@@ -627,6 +676,14 @@ export default function AudienceDashboard() {
           </p>
         </div>
       </footer>
+      {/* Hidden printable receipt */}
+      {user && (
+        <div className="hidden">
+          <div id="kbc-receipt-print-area">
+            <PaymentReceipt user={user} logoSrc={logoSmImg} />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

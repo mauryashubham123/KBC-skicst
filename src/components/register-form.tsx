@@ -592,17 +592,7 @@ export default function RegistrationForm({
 															<MessageCircle className="w-3.5 h-3.5 fill-[#128c7e] text-white" />
 															<span>WhatsApp</span>
 														</a>
-														या <strong>9453360943</strong>
-														<a
-															href="https://wa.me/919453360943?text=Hello%20SKICST,%20here%20is%20my%20KBC-2026%20registration%20payment%20screenshot."
-															target="_blank"
-															rel="noopener noreferrer"
-															className="inline-flex items-center gap-1 bg-[#25d366]/10 text-[#128c7e] hover:bg-[#25d366]/20 font-bold px-2 py-0.5 rounded-md border border-[#25d366]/30 transition-colors mx-1"
-															title="Send Screenshot to 9453360943 on WhatsApp"
-														>
-															<MessageCircle className="w-3.5 h-3.5 fill-[#128c7e] text-white" />
-															<span>WhatsApp</span>
-														</a>
+
 														पर पेमेंट स्क्रीनशॉट (Screenshot) का मैसेज भेजें (हरे रंग के WhatsApp बटन पर क्लिक करके सीधे भेज सकते हैं) या कॉल करके वेरिफाई कराएं।
 														<span className="text-red-600 font-semibold block mt-1">
 															⚠️ इसके बिना आपका फॉर्म भरा हुआ नहीं माना जाएगा और आप लॉगिन नहीं कर पाएंगे।
